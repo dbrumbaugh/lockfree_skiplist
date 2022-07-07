@@ -1,6 +1,26 @@
 #include "sl_map.h"
 
 #include <stdio.h>
+#include <algorithm>
+
+struct MapKey {
+    int key;
+    friend bool operator<(const MapKey &a, const MapKey &b) {
+        return a.key < b.key;
+    }
+
+    friend bool operator>(const MapKey &a, const MapKey &b) {
+        return a.key > b.key;
+    }
+
+    friend bool operator!=(const MapKey &a, const MapKey &b) {
+        return a.key != b.key;
+    }
+
+    friend bool operator==(const MapKey &a, const MapKey &b) {
+        return a.key == b.key;
+    }
+};
 
 int main() {
     // sl_map: Busy-waiting implementation.
@@ -14,19 +34,20 @@ int main() {
     //            consume more memory.
 
     // sl_map<int, int> slist;
-    sl_map_gc<int, int> slist;
+    sl_map_gc<MapKey, int> slist;
 
     //   << Insertion >>
-    // Insert 3 KV pairs: {0, 0}, {1, 10}, {2, 20}.
-    for (int i=0; i<3; ++i) {
-        slist.insert(std::make_pair(i, i*10));
+    // Insert 100 KV pairs: {0, 0}, {1, 10}, {2, 20}.
+    for (int i=0; i<100; ++i) {
+        slist.insert(std::make_pair(MapKey{i}, i*10));
     }
 
     //   << Point lookup >>
-    for (int i=0; i<3; ++i) {
-        auto itr = slist.find(i);
+    for (int i=0; i<100; ++i) {
+        auto k = MapKey{i};
+        auto itr = slist.find(k);
         if (itr == slist.end()) continue; // Not found.
-        printf("[point lookup] key: %d, value: %d\n", itr->first, itr->second);
+        printf("[point lookup] key: %d, value: %d\n", itr->first.key, itr->second);
 
         // Note: In `sl_map`, while `itr` is alive and holding a node
         //       in skiplist, other thread cannot erase and free the node.
@@ -39,12 +60,23 @@ int main() {
 
     //   << Erase >>
     // Erase the KV pair for key 1: {1, 10}.
-    slist.erase(1);
+    slist.erase(MapKey{1});
 
     //   << Iteration >>
     for (auto& entry: slist) {
-        printf("[iteration] key: %d, value: %d\n", entry.first, entry.second);
+        printf("[iteration] key: %d, value: %d\n", entry.first.key, entry.second);
     }
+
+    slist.erase(MapKey{51});
+    slist.erase(MapKey{50});
+    auto lb = slist.lower_bound(MapKey{50});
+    auto ub = slist.upper_bound(MapKey{99});
+
+    for (; lb!=ub; lb++) {
+        printf("[bound traversal] key: %d, value: %d\n", lb->first.key, lb->second);
+    }
+    printf("[bound traversal] key: %d, value: %d\n", lb->first.key, lb->second);
+
 
     return 0;
 }

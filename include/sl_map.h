@@ -218,6 +218,21 @@ public:
         return iterator(&slist, cursor);
     }
 
+    iterator lower_bound(K key) {
+        Node query;
+        query.kv.first = key;
+        skiplist_node* cursor = skiplist_find_greater_or_equal(&slist, &query.snode);
+        return iterator(&slist, cursor);
+    }
+
+
+    iterator upper_bound(K key) {
+        Node query;
+        query.kv.first = key;
+        skiplist_node* cursor = skiplist_find_smaller_or_equal(&slist, &query.snode);
+        return iterator(&slist, cursor);
+    }
+
     virtual
     iterator erase(iterator& position) {
         skiplist_node* cursor = position.cursor;
