@@ -9,7 +9,7 @@ CFLAGS += -O3
 #CFLAGS += -fsanitize=address -fuse-ld=gold
 
 CXXFLAGS = $(CFLAGS) \
-	--std=c++11 \
+	--std=c++17 \
 
 
 SKIPLIST = src/skiplist.o
