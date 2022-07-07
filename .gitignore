@@ -1,0 +1,10 @@
+*.a
+*.o
+*.so
+examples/cpp_map_example
+examples/cpp_set_example
+examples/pure_c_example
+tests/container_test
+tests/mt_test
+tests/skiplist_test
+tests/stl_map_compare
