@@ -48,7 +48,7 @@ struct map_node {
     ~map_node() {
         skiplist_free_node(&snode);
     }
-    static int cmp(skiplist_node* a, skiplist_node* b, void* aux) {
+    static int cmp(skiplist_node* a, skiplist_node* b, void* /*aux*/) {
         map_node *aa, *bb;
         aa = _get_entry(a, map_node, snode);
         bb = _get_entry(b, map_node, snode);
