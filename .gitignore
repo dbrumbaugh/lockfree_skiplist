@@ -1,6 +1,7 @@
 *.a
 *.o
 *.so
+.ccls*
 examples/cpp_map_example
 examples/cpp_set_example
 examples/pure_c_example
