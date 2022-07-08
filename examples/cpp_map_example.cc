@@ -39,8 +39,12 @@ int main() {
     //   << Insertion >>
     // Insert 100 KV pairs: {0, 0}, {1, 10}, {2, 20}.
     for (int i=0; i<100; ++i) {
-        slist.insert(std::make_pair(MapKey{i}, i*10));
+        auto res = slist.insert(std::make_pair(MapKey{i}, i*10));
+        printf("[insertion] key: %d \t success %d\n", i, res.second);
     }
+
+    auto res = slist.insert(std::make_pair(MapKey{5}, 5*10));
+    printf("[insertion] key: %d \t success %d\n", 5, res.second);
 
     //   << Point lookup >>
     for (int i=0; i<100; ++i) {
